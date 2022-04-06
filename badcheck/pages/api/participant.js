@@ -6,7 +6,7 @@ const Participant = async (req, res) => {
          
         const { name } = await req.body
         
-        var logger = fs.createWriteStream('file/participant.txt', {
+        var logger = fs.createWriteStream('participant.txt', {
             flags: 'a' // 'a' means appending (old data will be preserved)
           })
           
@@ -18,7 +18,7 @@ const Participant = async (req, res) => {
 
     if(req.method == 'GET'){
 
-        fs.readFile('file/participant.txt', 'utf8' , (err, data) => {
+        fs.readFile('participant.txt', 'utf8' , (err, data) => {
             if (err) {
               console.error(err);
               return res.status(500).json({"message": "somthing error!"});
