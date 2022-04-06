@@ -186,7 +186,7 @@ export default function Home() {
             <div className="justify-center">
               <div className="mb-3 xl:w-96">
                 <label htmlFor="no.court" className="form-label inline-block mb-2 text-[#0275d8] font-medium">Number of Court</label>
-                <input type="number"
+                <input type="number" inputMode="numeric"
                   className="form-control block w-full px-3 py-1.5 text-base font-normal text-[#0275d8] bg-white bg-clip-padding border border-solid border-[#0275d8] rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                   id="no.court"
                   defaultValue={noCourt}
@@ -198,7 +198,7 @@ export default function Home() {
               </div>
               <div className="mb-3 xl:w-96">
                 <label htmlFor="costPerCourt" className="form-label inline-block mb-2 text-[#0275d8] font-medium">Cost / Hour / Court</label>
-                <input type="number"
+                <input type="number" inputMode="numeric"
                   className="form-control block w-full px-3 py-1.5 text-base font-normal text-[#0275d8] bg-white bg-clip-padding border border-solid border-[#0275d8] rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                   id="costPerCourt"
                   defaultValue={costCourt}
@@ -210,7 +210,7 @@ export default function Home() {
               </div>
               <div className="mb-3 xl:w-96">
                 <label htmlFor="noHours" className="form-label inline-block mb-2 text-[#0275d8] font-medium">Number of Hours</label>
-                <input type="number"
+                <input type="number" inputMode="numeric"
                   className="form-control block w-full px-3 py-1.5 text-base font-normal text-[#0275d8] bg-white bg-clip-padding border border-solid border-[#0275d8] rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                   id="noHours"
                   defaultValue={noHours}
