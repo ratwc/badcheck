@@ -1,42 +1,39 @@
-const fs = require('fs');  
+import mongoClientPromise from "../../libs/mongodb";
 
 const Participant = async (req, res) => { 
+
+    const db = await mongoClientPromise;
 
     if(req.method == 'POST'){
          
         const { name } = await req.body
-        
-        var logger = fs.createWriteStream('participant.txt', {
-            flags: 'a' // 'a' means appending (old data will be preserved)
-          })
-          
-        logger.write(name + "," + (Math.floor(Date.now()/1000)).toString() + "\n"); 
-        logger.end()
 
-        return res.status(201).json("check in successfully");
+        let data = {
+            "name": name,
+            "timestamp": (Math.floor(Date.now()/1000)).toString()
+        }
+        var result = await db.db("badcheck").collection("paticipant").insertOne(data);
+
+        if (result){
+            return res.status(201).json("check in successfully");
+        }
+        return res.status(500).json("save error");
     }
 
     if(req.method == 'GET'){
 
-        fs.readFile('participant.txt', 'utf8' , (err, data) => {
-            if (err) {
-              console.error(err);
-              return res.status(500).json({"message": "somthing error!"});
-            }
- 
-            var splitPerson = data.split("\n");
-            
-            let participants = [];
 
-            splitPerson.forEach(person => {
-                if(person.length > 0){
-                    var tempDict = {};
-                    tempDict['name'] = person.split(",")[0].trim();
-                    tempDict['timestamp'] = person.split(",")[1].trim();
-                    
-                    var unix_timestamp = tempDict['timestamp']
- 
-                    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+        await db.db("badcheck").collection("paticipant").find({}).toArray(function (err, result) {
+            if (err) {
+                return res.status(500).json(err);
+            } else {
+               let participants = [];
+
+               result.forEach(person => {
+
+                    var unix_timestamp = person['timestamp']
+    
+                        // multiplied by 1000 so that the argument is in milliseconds, not seconds.
                     var date = new Date(unix_timestamp * 1000);
 
                     var hours = date.getHours();
@@ -51,16 +48,12 @@ const Participant = async (req, res) => {
 
                     var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
 
-                    tempDict['time'] = formattedTime;
-                    tempDict['date'] = formattedDate;
-
-                    participants.push(tempDict);
-                }
-            });
-            
-            return res.status(201).json(participants);
-          })
-
+                    person['time'] = formattedTime;
+                    person['date'] = formattedDate;
+                });
+                return res.status(201).json(result);
+            }
+        })
     }
 }
 

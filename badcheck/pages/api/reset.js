@@ -1,12 +1,15 @@
-const fs = require('fs');  
+import mongoClientPromise from "../../libs/mongodb";
 
 const Reset = async (req, res) => { 
 
+    const db = await mongoClientPromise;
+
     if(req.method == 'POST'){
          
-        fs.truncate('participant.txt', 0, function(){console.log('done')}) 
+        var result = await db.db("badcheck").collection("paticipant").deleteMany({})
         
-        return res.status(200).json({"message": "reset success"})
+        if(result) return res.status(200).json({"message": "reset success"})
+        else return  res.status(500).json({"message": "can't reset"})
     }
 }
 

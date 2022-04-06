@@ -56,12 +56,13 @@ export default function Home() {
               icon: "success",
               title: "Check-in success",
               showConfirmButton: false,
-              timer: 1500
+              timer: 1200
             });
           }
         }); 
       }
     }
+    getParticipant();
   }
 
   const calCost = async () => {
@@ -71,6 +72,12 @@ export default function Home() {
         setParticipants(res.data.participants);
         setCostTotal(res.data.costTotal);
         setCalStatus(true);
+        Swal.fire({
+          icon: "success",
+          title: "Calculate success",
+          showConfirmButton: false,
+          timer: 1200
+        });
       }
     }); 
   }
@@ -86,7 +93,15 @@ export default function Home() {
     }).then( async (isConfirm) => {
       if (isConfirm) {
         await axios.post("/api/reset").then((res) => {
-          if(res.status === 200) getParticipant();
+          if(res.status === 200) {
+            Swal.fire({
+              icon: "success",
+              title: "Reset success",
+              showConfirmButton: false,
+              timer: 1200
+            });
+            getParticipant();
+          }
         })
       } 
     })
@@ -106,10 +121,11 @@ export default function Home() {
   }
 
   useEffect(() => {
-    getParticipant();
+    getParticipant(); 
     setNoCourt(2);
     setCostCourt(160);
     setNoHours(2);
+    setCalStatus(false)
   }, [name])
 
   // useEffect(() => {
@@ -133,7 +149,7 @@ export default function Home() {
             :
             <>
               <div className='flex grid justify-center justify-items-center text-[#d9534f]'>
-                <h2 className='py-3 text-[#d9534f] text-xl font-bold'>{timeStart}</h2>
+                <h2 className='py-3 text-[#d9534f] text-xl font-bold'>START: {timeStart}</h2>
               </div> 
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
@@ -152,7 +168,7 @@ export default function Home() {
                       <tbody>
                         {participants?.map((person) => {
                           return (
-                            <tr key={person.name} className="bg-gray-100 border-b">
+                            <tr key={person.timestamp} className="bg-gray-100 border-b">
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-center">{person.name}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-center">{person.time}</td>
                               {calStatus ? 
