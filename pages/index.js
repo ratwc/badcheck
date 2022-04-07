@@ -248,6 +248,7 @@ export default function Home() {
                   Number of Court
                 </label>
                 <input
+                  style={{ marginTop: "10px" }}
                   type="number"
                   inputMode="numeric"
                   className="form-control block w-full px-3 py-1.5 text-base font-normal text-[#0275d8] bg-white bg-clip-padding border border-solid border-[#0275d8] rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
@@ -268,6 +269,7 @@ export default function Home() {
                   Cost / Hour / Court
                 </label>
                 <input
+                  style={{ marginTop: "10px" }}
                   type="number"
                   inputMode="numeric"
                   className="form-control block w-full px-3 py-1.5 text-base font-normal text-[#0275d8] bg-white bg-clip-padding border border-solid border-[#0275d8] rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
@@ -288,6 +290,7 @@ export default function Home() {
                   Number of Hours
                 </label>
                 <input
+                  style={{ marginTop: "10px" }}
                   type="number"
                   inputMode="numeric"
                   className="form-control block w-full px-3 py-1.5 text-base font-normal text-[#0275d8] bg-white bg-clip-padding border border-solid border-[#0275d8] rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
