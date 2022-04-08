@@ -322,14 +322,14 @@ export default function Home() {
                               ) : (
                                 <>
                                   {(person.status == 1) ? (
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#00AB66] text-center">
-                                      <button id={person._id} name={person.name} onClick={personHandler}>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#00AB66] text-center">
+                                      <button id={person._id} name={person.name} onClick={personHandler} className="font-bold underline underline-offset-2">
                                         Live
                                       </button>
                                     </td>
                                   ) : (
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#d9534f] text-center">
-                                      <button id={person._id} name={person.name} onClick={personHandler}>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#d9534f] text-center">
+                                      <button id={person._id} name={person.name} onClick={personHandler} className="font-bold underline underline-offset-2">
                                         Out
                                       </button>
                                     </td>
