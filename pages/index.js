@@ -127,7 +127,7 @@ export default function Home() {
 
     if (person.status === 1) {
       await Swal.fire({
-        title: '"' + person.name + '" informations',
+        title: '"' + person.name + '"',
         text: "check-in: " + person.time,
         showDenyButton: true,
         showCancelButton: true,
