@@ -1,5 +1,6 @@
 import mongoClientPromise from "../../libs/mongodb";
 import { timeDifference } from "../../components/timeDifference";
+import { getCurrentTime } from "../../components/currentTime";
 
 const Participant = async (req, res) => { 
 
@@ -11,7 +12,8 @@ const Participant = async (req, res) => {
 
         const mongoose = require('mongoose');
 
-        var timeout = (Math.floor(Date.now()/1000)).toString();
+        // get used time
+        var timeout = (Math.floor(getCurrentTime()/1000)).toString();
         var timein = person.timein;
 
         var dateout = new Date(parseInt(timeout) * 1000);
@@ -20,6 +22,7 @@ const Participant = async (req, res) => {
         const [days, hours, minutes, seconds] = timeDifference(dateout, datein)
 
         var totalMinutes = days * 1440 + hours * 60 + minutes + Math.ceil(seconds / 60)
+        // ---------- //
 
         const query = {_id: mongoose.Types.ObjectId(person._id)};
         const newValue = { $set: { "timeout": timeout, status: 0, used_minutes: totalMinutes} };

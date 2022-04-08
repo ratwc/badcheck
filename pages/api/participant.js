@@ -1,4 +1,5 @@
 import mongoClientPromise from "../../libs/mongodb";
+import { getCurrentTime } from "../../components/currentTime";
 
 const Participant = async (req, res) => { 
 
@@ -10,7 +11,7 @@ const Participant = async (req, res) => {
 
         let data = {
             "name": name,
-            "timein": (Math.floor(Date.now()/1000)).toString(),
+            "timein": (Math.floor(getCurrentTime()/1000)).toString(),
             "timeout": "-",
             "status": 1
         }

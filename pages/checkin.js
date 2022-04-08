@@ -38,7 +38,7 @@ const Checkin = () => {
                 else {
                     await Swal.fire({
                         icon: "warning",
-                        title: "Session not open yet, plase open session before check-in",
+                        title: "Session not open yet, please open session before check-in",
                         confirmButtonText: "Open session",
                         confirmButtonColor: "#00AB66",
                       }).then((isConfirm) => {

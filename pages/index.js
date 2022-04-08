@@ -215,9 +215,9 @@ export default function Home() {
     setCalStatus(false);
   }, [name]);
 
-  useEffect(() => {
-    console.log(participants);
-  }, [participants])
+  // useEffect(() => {
+  //   console.log(participants);
+  // }, [participants])
 
   return (
     <>

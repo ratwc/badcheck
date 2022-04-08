@@ -19,7 +19,6 @@ const Calculate = async (req, res) => {
         participants.forEach(person => {
     
             var datein = new Date(parseInt(person.timein) * 1000);
-
             var dateout = new Date(parseInt((person.status === 0 && person.timeout < endTime) ? person.timeout: endTime) * 1000); 
 
             const [days, hours, minutes, seconds] = timeDifference(dateout, datein)
@@ -40,6 +39,8 @@ const Calculate = async (req, res) => {
             sumCost += cost;
             person['cost'] = cost.toFixed(2);
         });
+
+        sumCost = sumCost.toFixed(2); // normalize sum to 2 digits
 
         return res.status(200).json({"participants": participants, "costTotal": sumCost});
         
