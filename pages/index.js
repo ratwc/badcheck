@@ -1,7 +1,3 @@
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
-// import { participant } from '../file/participant'
 import Swal from "sweetalert2";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -26,9 +22,9 @@ export default function Home() {
     if (checkEmpty === true) {
       await Swal.fire({
         icon: "warning",
-        title: "If you check-in as a first one, session will be start!",
+        title: "Session will be start when you check-in as a first one.",
         showCancelButton: true,
-        confirmButtonText: "OK",
+        confirmButtonText: "Check-in",
         confirmButtonColor: "#00AB66",
       }).then((isConfirm) => {
         if (isConfirm.isConfirmed === false) {
@@ -87,15 +83,15 @@ export default function Home() {
   };
 
   const reset = async () => {
-    Swal.fire({
+    await Swal.fire({
       icon: "warning",
       title: "Are you sure to reset?",
       showCancelButton: true,
       confirmButtonText: "Reset",
       confirmButtonColor: "#d9534f",
     }).then(async (isConfirm) => {
-      if (isConfirm) {
-        await axios.post("/api/reset").then((res) => {
+      if (isConfirm.isConfirmed) {
+        await axios.post("/api/reset", {time: timeStart, participants: participants} ).then((res) => {
           if (res.status === 200) {
             Swal.fire({
               icon: "success",
@@ -120,6 +116,97 @@ export default function Home() {
     });
   };
 
+  const personHandler = async (e) => {
+    const id = e.target.id;
+
+    const res = participants.filter(({
+      _id
+    }) => id.includes(_id));
+
+    const person = res[0];
+
+    if (person.status === 1){
+      await Swal.fire({
+        title: '"' + person.name + '" informations',
+        text: "check-in: " + person.time,
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Check-out',
+        confirmButtonColor: "#ca0b00",
+        denyButtonText: `Delete Check-in`,
+        denyButtonColor: "#000000"
+      }).then(async (result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          await Swal.fire({
+            icon: "warning",
+            title: "Are you sure to check-out",
+            showCancelButton: true,
+            confirmButtonText: "Check-out",
+            confirmButtonColor: "#ca0b00",
+          }).then(async (isConfirm) => {
+            if (isConfirm.isConfirmed) {
+              await axios.post("/api/checkout", {person: person}).then((res) => {
+                if(res.status === 201) {
+                  Swal.fire({
+                    icon: "success",
+                    title: "Check-out success",
+                    showConfirmButton: false,
+                    timer: 1200,
+                  });
+                  getParticipant();
+                }
+              });
+            }
+          });
+        } else if (result.isDenied) {
+          deletePerson(person);
+        }
+      })
+    }
+    else {
+      await Swal.fire({
+        title: '"' + person.name + '" informations',
+        html: "<p>check-in: " + person.time + "</p><br>" + "<p>check-out: " + person.endtime + "</p>",
+        showCancelButton: true,
+        confirmButtonText: "Delete Check-in",
+        confirmButtonColor: "#000000",
+      }).then(async (isConfirm) => {
+        if (isConfirm.isConfirmed) {
+          deletePerson(person);
+        }
+      });
+    }
+  }
+
+  const deletePerson = async (person) => {
+
+    const participant = person;
+    await Swal.fire({
+      icon: "warning",
+      title: "Are you sure to delete your check-in",
+      text: "your will not be a participant forever!",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      confirmButtonColor: "#000000",
+    }).then(async (isConfirm) => {
+      if (isConfirm.isConfirmed) {
+        await axios.post("/api/delete", {person: participant}).then((res) => {
+          if(res.status === 202) {
+            Swal.fire({
+              icon: "success",
+              title: "Delete success",
+              text: "I will always remember you forever~",
+              showConfirmButton: false,
+              timer: 1500,
+            })
+            getParticipant();
+          }
+        });
+      }
+    });
+  }
+
   useEffect(() => {
     getParticipant();
     setNoCourt(2);
@@ -128,9 +215,9 @@ export default function Home() {
     setCalStatus(false);
   }, [name]);
 
-  // useEffect(() => {
-  //   console.log(participants);
-  // }, [participants])
+  useEffect(() => {
+    console.log(participants);
+  }, [participants])
 
   return (
     <>
@@ -177,12 +264,17 @@ export default function Home() {
                           {calStatus ? (
                             <th
                               scope="col"
-                              className="text-md font-medium text-[#00AB66] px-6 py-4 text-right"
+                              className="text-md font-medium text-[#0275d8] px-6 py-4 text-right"
                             >
                               Cost
                             </th>
                           ) : (
-                            <></>
+                            <th
+                              scope="col"
+                              className="text-md font-medium text-gray-900 px-6 py-4 text-center"
+                            >
+                              Status
+                            </th>
                           )}
                         </tr>
                       </thead>
@@ -190,21 +282,32 @@ export default function Home() {
                         {participants?.map((person) => {
                           return (
                             <tr
-                              key={person.timestamp}
+                              key={person._id}
                               className="bg-gray-100 border-b"
                             >
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
-                                {person.name}
+                                <button id={person._id} name={person.name} onClick={personHandler}>{person.name}</button>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
                                 {person.time}
                               </td>
+                              
                               {calStatus ? (
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#00AB66] text-right">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#0275d8] text-right">
                                   {person.cost}
                                 </td>
                               ) : (
-                                <></>
+                                <>
+                                {(person.status == 1) ? (
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#00AB66] text-center">
+                                      Live
+                                  </td>
+                                ) : (
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#d9534f] text-center">
+                                      Out
+                                  </td>
+                                )}
+                                </>
                               )}
                             </tr>
                           );
@@ -212,10 +315,10 @@ export default function Home() {
                         {calStatus ? (
                           <tr className="bg-gray-100 border-b">
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center"></td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#00AB66] text-center">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#0275d8] text-center">
                               Total Cost:
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#00AB66] text-right">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#0275d8] text-right">
                               {costTotal}
                             </td>
                           </tr>
@@ -233,7 +336,7 @@ export default function Home() {
             className="rounded-md border-2 border-[#00AB66] px-4 py-4 text-[#00AB66] text-4xl font-bold my-2"
             onClick={checkin}
           >
-            Check in
+            {checkEmpty? "Start session" : "Check in"}
           </button>
           {checkEmpty ? (
             <></>
@@ -292,7 +395,7 @@ export default function Home() {
                 <input
                   style={{ marginTop: "10px" }}
                   type="number"
-                  inputMode="numeric"
+                  // inputMode="numeric"
                   className="form-control block w-full px-3 py-1.5 text-base font-normal text-[#0275d8] bg-white bg-clip-padding border border-solid border-[#0275d8] rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                   id="noHours"
                   defaultValue={noHours}

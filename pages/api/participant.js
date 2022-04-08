@@ -10,7 +10,9 @@ const Participant = async (req, res) => {
 
         let data = {
             "name": name,
-            "timestamp": (Math.floor(Date.now()/1000)).toString()
+            "timein": (Math.floor(Date.now()/1000)).toString(),
+            "timeout": "-",
+            "status": 1
         }
         var result = await db.db("badcheck").collection("paticipant").insertOne(data);
 
@@ -27,11 +29,10 @@ const Participant = async (req, res) => {
             if (err) {
                 return res.status(500).json(err);
             } else {
-               let participants = [];
 
                result.forEach(person => {
 
-                    var unix_timestamp = person['timestamp']
+                    var unix_timestamp = person['timein']
     
                         // multiplied by 1000 so that the argument is in milliseconds, not seconds.
                     var date = new Date(unix_timestamp * 1000);
@@ -50,8 +51,25 @@ const Participant = async (req, res) => {
 
                     person['time'] = formattedTime;
                     person['date'] = formattedDate;
+
+                    if (person.status === 0) {
+    
+                        unix_timestamp = person['timeout'];
+
+                        date = new Date(unix_timestamp * 1000);
+
+                        minutes = "0" + date.getMinutes();
+                        seconds = "0" + date.getSeconds();
+
+                        formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+
+                        person['endtime'] = formattedTime;
+
+                    }
                 });
+
                 return res.status(201).json(result);
+                
             }
         })
     }
