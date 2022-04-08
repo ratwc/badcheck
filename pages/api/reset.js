@@ -3,9 +3,10 @@ import mongoClientPromise from "../../libs/mongodb";
 const Reset = async (req, res) => { 
 
     const db = await mongoClientPromise;
-    const { time, participants } = req.body;
 
     if(req.method == 'POST'){
+
+        const { time, participants } = req.body;
          
         let data = {
             time: time,

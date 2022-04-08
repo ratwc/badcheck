@@ -1,4 +1,4 @@
-import { timeDifference } from "../../libs/timeDifference";
+import { timeDifference } from "../../components/timeDifference";
 
 
 const Calculate = async (req, res) => { 
@@ -7,8 +7,6 @@ const Calculate = async (req, res) => {
          
         const { participants, noCourt, costCourt, noHours } = await req.body
 
-        console.log(participants);
-        
         var startTime = participants[0].timein
 
         var usedSecond = noHours * 60 * 60;

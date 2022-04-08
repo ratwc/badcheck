@@ -91,7 +91,7 @@ export default function Home() {
       confirmButtonColor: "#d9534f",
     }).then(async (isConfirm) => {
       if (isConfirm.isConfirmed) {
-        await axios.post("/api/reset", {time: timeStart, participants: participants} ).then((res) => {
+        await axios.post("/api/reset", { time: timeStart, participants: participants }).then((res) => {
           if (res.status === 200) {
             Swal.fire({
               icon: "success",
@@ -125,7 +125,7 @@ export default function Home() {
 
     const person = res[0];
 
-    if (person.status === 1){
+    if (person.status === 1) {
       await Swal.fire({
         title: '"' + person.name + '" informations',
         text: "check-in: " + person.time,
@@ -146,8 +146,8 @@ export default function Home() {
             confirmButtonColor: "#ca0b00",
           }).then(async (isConfirm) => {
             if (isConfirm.isConfirmed) {
-              await axios.post("/api/checkout", {person: person}).then((res) => {
-                if(res.status === 201) {
+              await axios.post("/api/checkout", { person: person }).then((res) => {
+                if (res.status === 201) {
                   Swal.fire({
                     icon: "success",
                     title: "Check-out success",
@@ -191,8 +191,8 @@ export default function Home() {
       confirmButtonColor: "#000000",
     }).then(async (isConfirm) => {
       if (isConfirm.isConfirmed) {
-        await axios.post("/api/delete", {person: participant}).then((res) => {
-          if(res.status === 202) {
+        await axios.post("/api/delete", { person: participant }).then((res) => {
+          if (res.status === 202) {
             Swal.fire({
               icon: "success",
               title: "Delete success",
@@ -288,25 +288,52 @@ export default function Home() {
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
                                 <button id={person._id} name={person.name} onClick={personHandler}>{person.name}</button>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
-                                {person.time}
-                              </td>
-                              
+                              {(person.status === 1) ?
+                                (<>
+                                  {calStatus ?
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#00AB66] text-center">
+                                      <button id={person._id} name={person.name} onClick={personHandler}>
+                                      {person.used_minutes} Min.
+                                      </button>
+                                    </td>
+                                    :
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#00AB66] text-center">
+                                      <button id={person._id} name={person.name} onClick={personHandler}>
+                                        {person.time}
+                                      </button>
+                                    </td>
+                                  }
+                                </>)
+                                : (
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#d9534f] text-center">
+                                    <button id={person._id} name={person.name} onClick={personHandler}>
+                                      {person.used_minutes} Min.
+                                    </button>
+                                  </td>
+                                )
+                              }
+
                               {calStatus ? (
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#0275d8] text-right">
-                                  {person.cost}
+                                  <button id={person._id} name={person.name} onClick={personHandler}>
+                                    {person.cost}
+                                  </button>
                                 </td>
                               ) : (
                                 <>
-                                {(person.status == 1) ? (
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#00AB66] text-center">
-                                      Live
-                                  </td>
-                                ) : (
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#d9534f] text-center">
-                                      Out
-                                  </td>
-                                )}
+                                  {(person.status == 1) ? (
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#00AB66] text-center">
+                                      <button id={person._id} name={person.name} onClick={personHandler}>
+                                        Live
+                                      </button>
+                                    </td>
+                                  ) : (
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#d9534f] text-center">
+                                      <button id={person._id} name={person.name} onClick={personHandler}>
+                                        Out
+                                      </button>
+                                    </td>
+                                  )}
                                 </>
                               )}
                             </tr>
@@ -336,7 +363,7 @@ export default function Home() {
             className="rounded-md border-2 border-[#00AB66] px-4 py-4 text-[#00AB66] text-4xl font-bold my-2"
             onClick={checkin}
           >
-            {checkEmpty? "Start session" : "Check in"}
+            {checkEmpty ? "Start session" : "Check-in"}
           </button>
           {checkEmpty ? (
             <></>
