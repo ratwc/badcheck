@@ -166,7 +166,7 @@ export default function Home() {
     }
     else {
       await Swal.fire({
-        title: '"' + person.name + '" informations',
+        title: '"' + person.name + '"',
         html: "<p>check-in: " + person.time + "</p><br>" + "<p>check-out: " + person.endtime + "</p>",
         showCancelButton: true,
         confirmButtonText: "Delete Check-in",
@@ -450,6 +450,18 @@ export default function Home() {
           >
             Reset
           </button>
+        </div>
+      </div>
+      <div className="grid divide-y-[1px]">
+        <div>
+        </div>
+        <div className="py-2">
+          <a
+              className="px-4 py-4 text-xs text-left"
+              href="https://www.facebook.com/ratwc.info/"
+            >
+              Report bug
+          </a>
         </div>
       </div>
     </>

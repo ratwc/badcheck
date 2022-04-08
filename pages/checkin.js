@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios, { Axios } from "axios";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
-import { route } from "next/dist/server/router";
 
 const Checkin = () => {
 
@@ -58,8 +57,6 @@ const Checkin = () => {
 
     return(
         <>
-
-
         </>
     );
 }
