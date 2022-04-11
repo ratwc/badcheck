@@ -1,5 +1,6 @@
 import mongoClientPromise from "../../libs/mongodb";
 import { getCurrentTime } from "../../components/currentTime";
+import { timeFormat } from "../../components/timeFormat";
 
 const Participant = async (req, res) => { 
 
@@ -33,38 +34,27 @@ const Participant = async (req, res) => {
 
                result.forEach(person => {
 
-                    var unix_timestamp = person['timein']
+                    var unix_timestamp_in = person['timein']
     
                         // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-                    var date = new Date(unix_timestamp * 1000);
-
-                    var hours = date.getHours();
-                    var minutes = "0" + date.getMinutes();
-                    var seconds = "0" + date.getSeconds();
+                    var datein = new Date(unix_timestamp_in * 1000);
 
                     const monthNames = ["January", "February", "March", "April", "May", "June",
                                         "July", "August", "September", "October", "November", "December"
                                         ];
 
-                    var formattedDate = date.getDate() + " " + monthNames[date.getMonth()] + " " + date.getFullYear();
+                    var formattedDate = datein.getDate() + " " + monthNames[datein.getMonth()] + " " + datein.getFullYear();
 
-                    var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-
-                    person['time'] = formattedTime;
+                    person['time'] = timeFormat(datein);
                     person['date'] = formattedDate;
 
                     if (person.status === 0) {
     
-                        unix_timestamp = person['timeout'];
+                        var unix_timestamp_out = person['timeout'];
 
-                        date = new Date(unix_timestamp * 1000);
+                        var dateout = new Date(unix_timestamp_out * 1000);
 
-                        minutes = "0" + date.getMinutes();
-                        seconds = "0" + date.getSeconds();
-
-                        formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-
-                        person['endtime'] = formattedTime;
+                        person['endtime'] = timeFormat(dateout);
 
                     }
                 });

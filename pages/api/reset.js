@@ -7,12 +7,14 @@ const Reset = async (req, res) => {
     if(req.method == 'POST'){
 
         const { time, participants } = req.body;
-         
-        let data = {
-            time: time,
-            participants: participants
+        
+        if (participants.length > 0) {
+            let data = {
+                time: time,
+                participants: participants
+            }
+            db.db("badcheck").collection("log").insertOne(data)
         }
-        // db.db("badcheck").collection("log").insertOne(data)
 
         var result = await db.db("badcheck").collection("paticipant").deleteMany({})
         
