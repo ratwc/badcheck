@@ -283,9 +283,9 @@ export default function Home() {
                           return (
                             <tr
                               key={person._id}
-                              className="bg-gray-100 border-b"
+                              className="bg-gray-100 border-b break-all"
                             >
-                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
+                              <td className="px-6 py-4 text-sm font-medium text-gray-900 text-center break-all">
                                 <button id={person._id} name={person.name} onClick={personHandler}>{person.name}</button>
                               </td>
                               {(person.status === 1) ?
